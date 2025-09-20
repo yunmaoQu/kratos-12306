@@ -1,0 +1,4 @@
+bin
+.git
+third_party/googleapis/.git
+**/*.pb.go

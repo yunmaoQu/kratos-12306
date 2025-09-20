@@ -1,0 +1,21 @@
+version: "3.9"
+services:
+  seat:
+    image: crud/seat:dev
+    build: ./app/seat
+    ports: ["8000:8000", "9000:9000"]
+  order:
+    image: crud/order:dev
+    build: ./app/order
+    environment:
+      - ORDER_GRPC_ADDR=:9001
+      - SEAT_GRPC_ADDR=seat:9000
+    depends_on: [seat]
+    ports: ["8001:8001", "9001:9001"]
+  payment:
+    image: crud/payment:dev
+    build: ./app/payment
+    environment:
+      - ORDER_GRPC_ADDR=order:9001
+    depends_on: [order]
+    ports: ["8002:8002", "9002:9002"]

@@ -1,0 +1,20 @@
+syntax = "proto3";
+package payment.v1;
+option go_package = "github.com/yunmaoQu/kratos-12306/api/payment/v1;v1";
+
+import "google/api/annotations.proto";
+
+service PaymentService {
+  rpc Create(CreatePaymentRequest) returns (CreatePaymentReply) {
+    option (google.api.http) = { post:"/api/payments", body:"*" };
+  }
+  rpc Callback(CallbackRequest) returns (CallbackReply) {
+    option (google.api.http) = { post:"/api/payments/callback", body:"*" };
+  }
+}
+
+message CreatePaymentRequest { string order_no = 1; string channel = 2; }
+message CreatePaymentReply { string pay_url = 1; }
+
+message CallbackRequest { string order_no = 1; string channel = 2; string txn_id = 3; }
+message CallbackReply { bool ok = 1; }

@@ -1,0 +1,31 @@
+syntax = "proto3";
+package order.v1;
+option go_package = "github.com/yunmaoQu/kratos-12306/api/order/v1;v1";
+
+import "google/api/annotations.proto";
+
+service OrderService {
+  rpc Create(CreateRequest) returns (CreateReply) {
+    option (google.api.http) = { post:"/api/orders", body:"*" };
+  }
+  rpc Get(GetRequest) returns (GetReply) {
+    option (google.api.http) = { get:"/api/orders/{order_no}" };
+  }
+  rpc MarkPaid(MarkPaidRequest) returns (MarkPaidReply) {
+    option (google.api.http) = { post:"/api/orders/{order_no}/paid", body:"*" };
+  }
+}
+
+message CreateRequest {
+  string reservation_id = 1;
+  repeated Passenger passengers = 2;
+  string client_req_id = 3;
+}
+message Passenger { string name=1; string id_no=2; }
+message CreateReply { string order_no = 1; string status = 2; int64 amount = 3; }
+
+message GetRequest { string order_no = 1; }
+message GetReply { string order_no=1; string status=2; string reservation_id=3; int64 amount=4; }
+
+message MarkPaidRequest { string order_no = 1; string channel = 2; string txn_id = 3; }
+message MarkPaidReply { string order_no = 1; string status = 2; }
